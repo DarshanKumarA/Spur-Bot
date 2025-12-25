@@ -21,7 +21,7 @@ Before running the project, make sure you have:
    - **Mac/Linux:** `brew install redis`
    - **Docker:** `docker run --name spur-redis -p 6379:6379 -d redis`
 3. **Google Gemini API Key** (Get one from Google AI Studio).
-
+4. **venv** (Virtual Environment) (Recommended for isolation)
 ---
 
 ## 📦 Installation & Setup
@@ -88,6 +88,19 @@ npm run dev
 Then open http://localhost:5173 in your browser.
 
 ---
+
+## 🗄️ How to View the Database
+
+You can view and edit the SQLite database using **Prisma Studio**, a built-in graphical interface.
+
+1.  Open a new terminal in the `backend` folder.
+2.  Run the following command:
+    ```bash
+    npx prisma studio
+    ```
+3.  A new tab will open in your browser at [http://localhost:5555](http://localhost:5555).
+    - Click **"Message"** to see all chat history.
+    - Click **"Conversation"** to see session based conversations.
 
 ## 🧪 Tech Stack
 
