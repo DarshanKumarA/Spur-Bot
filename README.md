@@ -28,8 +28,7 @@ Before running the project, make sure you have:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/DarshanKumarA/Spur-Bot.git 
-cd Spur Chat-Bot    
+git clone https://github.com/DarshanKumarA/Spur-Bot.git     
 ```
 
 ### 2. Backend Setup
