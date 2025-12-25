@@ -17,7 +17,7 @@ It features a React frontend, Node.js/Express backend, SQLite persistence, and R
 Before running the project, make sure you have:
 1. **Node.js** (v16 or higher)
 2. **Redis** (Running on port 6379)
-   - **Windows:** Use [Memurai](https://www.memurai.com/) (Developer Edition).
+   - **Windows:** Use [Memurai](https://www.memurai.com/) (Developer Edition), while installing choose "Install as a WINDOWS SERVICE"
    - **Mac/Linux:** `brew install redis`
    - **Docker:** `docker run --name spur-redis -p 6379:6379 -d redis`
 3. **Google Gemini API Key** (Get one from Google AI Studio).
