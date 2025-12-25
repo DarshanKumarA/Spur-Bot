@@ -119,6 +119,40 @@ Then open http://localhost:5173 in your browser.
 
 ---
 
+## 🏗️ Architecture & Design Decisions
+
+### 1. Backend Structure (Layered Architecture)
+The backend follows a modular **Service-Oriented Architecture** to ensure separation of concerns:
+
+- **📂 Routes (`src/routes/`)**: Handles HTTP requests and validation. It acts as the entry point (Controller layer).
+- **🛠️ Services (`src/services/`)**: Contains core business logic isolated from routes.
+    - `redis.ts`: Manages the caching connection.
+    - `llm.ts`: Handles interactions with Google Gemini.
+- **💾 Data Layer (`prisma/`)**: Uses **Prisma ORM** for type-safe database interactions with SQLite.
+
+**Data Flow:**
+`Request` → `Route` → `Redis Service` (Check Cache) → `Prisma` (Fetch DB) → `Response`
+
+### 2. Key Design Decisions
+
+#### ⚡ Redis Cache-Aside Pattern
+**Problem:** Fetching chat history from the disk (SQLite) on every message/reload is slow and unscalable.
+**Solution:** Implemented the **Cache-Aside** pattern.
+- **Read:** Try Redis first. If missing, read DB and write to Redis.
+- **Write:** Write to DB, then **Invalidate (Delete)** the Redis cache key.
+- **Why?** This ensures data consistency (no stale caches) while providing <5ms read times for frequent access.
+
+#### 🔄 Optimistic UI Updates (Frontend)
+**Problem:** Waiting for the server/AI to reply makes the app feel sluggish.
+**Solution:** The UI immediately adds the user's message to the chat window *before* the network request finishes.
+- **Benefit:** Makes the app feel "instant" to the user, even on slower networks.
+
+#### Robust Error Handling
+**Problem:** Silent failures (e.g., user is offline, server crashes) lead to bad UX.
+**Solution:**
+- **Frontend:** Explicit checks for `navigator.onLine` and HTTP 500 errors.
+- **Backend:** `try/catch` blocks wrap all external calls (LLM, Redis, DB). If the AI service fails, a fallback "System Delay" message is returned instead of crashing the server.
+
 ## 📝 Testing the Bot
 
 To ensure the bot works correctly during assessment, test these scenarios:
