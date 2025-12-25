@@ -1,0 +1,156 @@
+# Spur Bot 🤖
+
+A full-stack AI Customer Support Chatbot built for the "Founding Engineer" test.
+It features a React frontend, Node.js/Express backend, SQLite persistence, and Redis caching.
+
+## Features
+- **AI-Powered:** Uses Google Gemini 2.5 Flash for intelligent, context-aware responses.
+- **Persistent History:** Saves chats to SQLite (via Prisma) so context isn't lost on reload.
+- **High Performance:** Implements the **Cache-Aside pattern** using Redis for instant history loading.
+- **Robustness:** Gracefully handles network failures, API errors, and offline states.
+- **Quick Actions:** Suggested questions for new sessions to improve UX.
+
+---
+
+## 🛠️ Prerequisites
+
+Before running the project, make sure you have:
+1. **Node.js** (v16 or higher)
+2. **Redis** (Running on port 6379)
+   - **Windows:** Use [Memurai](https://www.memurai.com/) (Developer Edition).
+   - **Mac/Linux:** `brew install redis`
+   - **Docker:** `docker run --name spur-redis -p 6379:6379 -d redis`
+3. **Google Gemini API Key** (Get one from Google AI Studio).
+
+---
+
+## 📦 Installation & Setup
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/DarshanKumarA/Spur-Bot.git 
+cd Spur Chat-Bot    
+```
+
+### 2. Backend Setup
+```bash
+cd backend
+npm install
+```
+
+**Create Environment Variables:** Create a `.env` file inside the `backend/` folder with the following:
+```env
+# Server Port
+PORT=3000
+
+# Database (SQLite)
+DATABASE_URL="file:./dev.db"
+
+# AI Provider (Google Gemini)
+GEMINI_API_KEY=your_actual_api_key_here
+
+# Redis Cache (Localhost)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+```
+
+**Initialize Database:**
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend
+npm install
+```
+
+---
+
+## How to Run
+
+You need to keep two terminals open to run the full stack.
+
+**Terminal 1: Start Backend**
+```bash
+cd backend
+npx tsx watch src/index.ts
+```
+
+Expected Output: `✅ Connected to Memurai (Redis)`
+
+**Terminal 2: Start Frontend**
+```bash
+cd frontend
+npm run dev
+```
+
+Then open http://localhost:5173 in your browser.
+
+---
+
+## 🧪 Tech Stack
+
+**Frontend:**
+- React (Vite)
+- TypeScript
+- Axios (API Calls)
+- React Markdown (Rich text rendering)
+
+**Backend:**
+- Node.js & Express
+- TypeScript
+- Database: SQLite + Prisma ORM
+- Caching: Redis + ioredis
+- AI: Google Generative AI SDK (@google/generative-ai)
+
+---
+
+## Architecture Highlights
+
+### 1. Cache Strategy
+- Fetches history from Redis first (Cache Hit)
+- If empty, fetches from DB and populates Redis (Cache Miss)
+- Invalidates cache on every new message to ensure consistency
+
+### 2. Error Handling
+- Frontend detects offline status and server crashes
+- Backend catches LLM failures and returns graceful fallback messages
+
+---
+
+## 📝 Testing the Bot
+
+To ensure the bot works correctly during assessment, test these scenarios:
+
+### Basic Policy Questions
+- "What is your shipping policy?"
+- "How much does shipping cost?"
+- "What countries do you ship to?"
+- "How do I return an item?"
+- "When will I get my refund?"
+
+### Edge Cases
+- "Do you ship to Australia?" (Should say no)
+- "Can I return after 40 days?" (Should redirect to support)
+- "Where is my order?" (Should say can't access order info)
+- "Is this product in stock?" (Should redirect to website/support)
+
+### Frustrated Customer
+- "This is ridiculous! I need help NOW!" (Should acknowledge frustration and help)
+
+### Unclear Questions
+- "What about shipping?" (Should ask clarifying questions)
+
+---
+
+## 📧 Contact
+
+For questions about this project, contact **support@spur.com** (fictional).
+
+---
+
+## 📄 License
+
+This project is for assessment purposes only.
